@@ -31,6 +31,18 @@ class Dino {
 // Create Dino Objects
 dinos.push(
   new Dino(
+    "Pigeon",
+    0.5,
+    9,
+    "herbavor",
+    "World Wide",
+    "Holocene",
+    "All birds are living dinosaurs.",
+    "./images/pigeon.png"
+  )
+);
+dinos.push(
+  new Dino(
     "Triceratops",
     13000,
     114,
@@ -120,21 +132,8 @@ dinos.push(
   )
 );
 
-dinos.push(
-  new Dino(
-    "Pigeon",
-    0.5,
-    9,
-    "herbavor",
-    "World Wide",
-    "Holocene",
-    "All birds are living dinosaurs.",
-    "./images/pigeon.png"
-  )
-);
-
 // Create Human Object
-const human = {
+let human = {
   name: "",
   weight: 0,
   height: 0,
@@ -162,47 +161,64 @@ const getHumanData = (function () {
   return getHumanData;
 })();
 
-// Create Dino Compare Method 1
+// Create Dino Compare Method 1 *** compares to random dinosaur from the list
 // NOTE: Weight in JSON file is in lbs, height in inches.
-const compWeight = (human, dyno) => {
-  if (human.weight > dyno.weight) {
-    return `${human.name} is heavier than ${dyno.species}`;
+const compWeight = () => {
+  let num = Math.floor(Math.random() * 8);
+  if (num == 4) num += 1; // skip human
+  console.log("weight", human);
+  if (dinos[num].species == "Pigeon") num += 1; // skip bird
+  if (human.weight > dinos[num].weight) {
+    dinos[num].fact = `${human.name} is heavier than ${dinos[num].species}`;
   } else {
-    return `${dyno.species} is heavier than ${human.name}`;
+    dinos[num].fact = `${dinos[num].species} is heavier than ${human.name}`;
   }
 };
 
-// Create Dino Compare Method 2
+// Create Dino Compare Method 2  *** compares to random dinosaur from the list
 // NOTE: Weight in JSON file is in lbs, height in inches.
-const compHeight = (human, dyno) => {
-  if (human.height > dyno.height) {
-    return `${human.name} is taller than ${dyno.species}`;
+const compHeight = () => {
+  let num = Math.floor(Math.random() * 8);
+  console.log("height", human);
+  if (num == 4) num += 2; // skip human and previous dinosaur in Method 1
+  if (dinos[num].species == "Pigeon") num += 1; // skip bird
+  if (human.height > dinos[num].height) {
+    dinos[num].fact = `${human.name} is taller than ${dinos[num].species}`;
   } else {
-    return `${dyno.species} is higher than ${human.name}`;
+    dinos[num].fact = `${dinos[num].species} is higher than ${human.name}`;
   }
 };
 
 // Create Dino Compare Method 3
 // NOTE: Weight in JSON file is in lbs, height in inches.
-const compDiet = (human, dyno) => {
-  if (human.diet === dyno.diet) {
-    return `${human.name} is ${human.diet} as well as ${dyno.diet}`;
+const compDiet = () => {
+  let num = Math.floor(Math.random() * 8);
+  console.log("diet", human);
+  if (num == 4) num += 3; // skip human and previous dinosaurs in Method 1, 2
+  if (dinos[num].species == "Pigeon") num += 1; // skip bird
+  if (human.diet === dinos[num].diet) {
+    dinos[
+      num
+    ].fact = `${human.name} is ${human.diet} as well as ${dinos[num].diet}`;
   } else {
-    return `${dyno.species} is ${dyno.diet} unlike ${human.name} who is ${human.diet}`;
+    dinos[
+      num
+    ].fact = `${dinos[num].species} is ${dinos[num].diet} unlike ${human.name} who is ${human.diet}`;
   }
 };
 
 // Generate Tiles for each Dino in dinosay
 const generateTiles = () => {
+  dinos.splice(4, 0, human);
   const tiles = [];
   dinos.forEach((d, idx) => {
     const tile = document.createElement("DIV");
     tile.classList.add("grid-item");
+
     tile.innerHTML = `
                       <h3>${d.name ? d.name : d.species}</h3>
                       <img src='${d.img}' />
-                      <p>${d.species && d.fact}<p/>
-                      `;
+                      <p>${d.name ? "" : d.fact}</p>`;
     tiles.push(tile);
   });
   console.log(tiles);
@@ -223,17 +239,16 @@ const addTilesToDom = () => {
 // Remove form from screen
 const hideForm = () => {
   form.style.display = "none";
-  grid.style.display = "initial";
+  grid.style.display = "flex";
 };
 
 // On button click, prepare and display infographic
 document.getElementById("btn").addEventListener("click", (e) => {
   e.preventDefault();
-  dinos.splice(4, 0, getHumanData());
+  human = getHumanData();
+  compWeight();
+  compHeight();
+  compDiet();
   addTilesToDom();
   hideForm();
 });
-
-function getRandomInt(max) {
-  return Math.floor(Math.random() * max);
-}
