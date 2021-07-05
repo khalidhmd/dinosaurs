@@ -1,7 +1,11 @@
-const arr = [];
+const dinos = [];
+const form = document.getElementById("dino-compare");
+const grid = document.getElementById("grid");
+
+form.style.display = "initial";
+grid.style.display = "none";
 
 // Create Dino Constructor
-
 class Dino {
   constructor(
     species = "",
@@ -25,8 +29,7 @@ class Dino {
 }
 
 // Create Dino Objects
-
-arr.push(
+dinos.push(
   new Dino(
     "Triceratops",
     13000,
@@ -39,7 +42,7 @@ arr.push(
   )
 );
 
-arr.push(
+dinos.push(
   new Dino(
     "Tyrannosaurus Rex",
     11905,
@@ -52,7 +55,7 @@ arr.push(
   )
 );
 
-arr.push(
+dinos.push(
   new Dino(
     "Anklyosaurus",
     10500,
@@ -65,7 +68,7 @@ arr.push(
   )
 );
 
-arr.push(
+dinos.push(
   new Dino(
     "Brachiosaurus",
     70000,
@@ -78,7 +81,7 @@ arr.push(
   )
 );
 
-arr.push(
+dinos.push(
   new Dino(
     "Stegosaurus",
     11600,
@@ -91,7 +94,7 @@ arr.push(
   )
 );
 
-arr.push(
+dinos.push(
   new Dino(
     "Elasmosaurus",
     16000,
@@ -104,7 +107,7 @@ arr.push(
   )
 );
 
-arr.push(
+dinos.push(
   new Dino(
     "Pteranodon",
     44,
@@ -117,7 +120,7 @@ arr.push(
   )
 );
 
-arr.push(
+dinos.push(
   new Dino(
     "Pigeon",
     0.5,
@@ -135,12 +138,11 @@ const human = {
   name: "",
   weight: 0,
   height: 0,
-  diet: "herbavor",
+  diet: "",
   img: "./images/human.png",
 };
 
 // Use IIFE to get human data from form
-
 const getHumanData = (function () {
   const name = document.getElementById("name");
   const feet = document.getElementById("feet");
@@ -150,6 +152,7 @@ const getHumanData = (function () {
 
   const getHumanData = () => {
     return {
+      ...human,
       name: name.value,
       height: parseInt(feet.value) * 12 + parseInt(inches.value),
       weight: parseInt(weight.value),
@@ -161,23 +164,76 @@ const getHumanData = (function () {
 
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches.
+const compWeight = (human, dyno) => {
+  if (human.weight > dyno.weight) {
+    return `${human.name} is heavier than ${dyno.species}`;
+  } else {
+    return `${dyno.species} is heavier than ${human.name}`;
+  }
+};
 
 // Create Dino Compare Method 2
 // NOTE: Weight in JSON file is in lbs, height in inches.
+const compHeight = (human, dyno) => {
+  if (human.height > dyno.height) {
+    return `${human.name} is taller than ${dyno.species}`;
+  } else {
+    return `${dyno.species} is higher than ${human.name}`;
+  }
+};
 
 // Create Dino Compare Method 3
 // NOTE: Weight in JSON file is in lbs, height in inches.
+const compDiet = (human, dyno) => {
+  if (human.diet === dyno.diet) {
+    return `${human.name} is ${human.diet} as well as ${dyno.diet}`;
+  } else {
+    return `${dyno.species} is ${dyno.diet} unlike ${human.name} who is ${human.diet}`;
+  }
+};
 
-// Generate Tiles for each Dino in Array
+// Generate Tiles for each Dino in dinosay
+const generateTiles = () => {
+  const tiles = [];
+  dinos.forEach((d, idx) => {
+    const tile = document.createElement("DIV");
+    tile.classList.add("grid-item");
+    tile.innerHTML = `
+                      <h3>${d.name ? d.name : d.species}</h3>
+                      <img src='${d.img}' />
+                      <p>${d.species && d.fact}<p/>
+                      `;
+    tiles.push(tile);
+  });
+  console.log(tiles);
+  return tiles;
+};
 
 // Add tiles to DOM
+const addTilesToDom = () => {
+  const frag = document.createDocumentFragment();
+  const tiles = generateTiles();
+  tiles.forEach((d, idx) => {
+    frag.appendChild(d);
+  });
+  grid.innerHTML = "";
+  grid.appendChild(frag);
+};
 
 // Remove form from screen
+const hideForm = () => {
+  form.style.display = "none";
+  grid.style.display = "initial";
+};
 
 // On button click, prepare and display infographic
 document.getElementById("btn").addEventListener("click", (e) => {
   e.preventDefault();
-  arr.splice(4, 0, getHumanData());
-
-  console.log(arr);
+  dinos.splice(4, 0, getHumanData());
+  addTilesToDom();
+  hideForm();
 });
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
