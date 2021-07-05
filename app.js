@@ -1,3 +1,5 @@
+const arr = [];
+
 // Create Dino Constructor
 
 class Dino {
@@ -24,92 +26,108 @@ class Dino {
 
 // Create Dino Objects
 
-const Triceratops = new Dino(
-  "Triceratops",
-  13000,
-  114,
-  "herbavor",
-  "North America",
-  "Late Cretaceous",
-  "First discovered in 1889 by Othniel Charles Marsh",
-  "./images/triceratops.png"
+arr.push(
+  new Dino(
+    "Triceratops",
+    13000,
+    114,
+    "herbavor",
+    "North America",
+    "Late Cretaceous",
+    "First discovered in 1889 by Othniel Charles Marsh",
+    "./images/triceratops.png"
+  )
 );
 
-const TyrannosaurusRex = new Dino(
-  "Tyrannosaurus Rex",
-  11905,
-  144,
-  "carnivor",
-  "North America",
-  "Late Cretaceous",
-  "The largest known skull measures in at 5 feet long.",
-  "./images/tyrannosaurusrex.png"
+arr.push(
+  new Dino(
+    "Tyrannosaurus Rex",
+    11905,
+    144,
+    "carnivor",
+    "North America",
+    "Late Cretaceous",
+    "The largest known skull measures in at 5 feet long.",
+    "./images/tyrannosaurusrex.png"
+  )
 );
 
-const Anklyosaurus = new Dino(
-  "Anklyosaurus",
-  10500,
-  55,
-  "herbavor",
-  "North America",
-  "Late Cretaceous",
-  "Anklyosaurus survived for approximately 135 million years.",
-  "./images/anklyosaurus.png"
+arr.push(
+  new Dino(
+    "Anklyosaurus",
+    10500,
+    55,
+    "herbavor",
+    "North America",
+    "Late Cretaceous",
+    "Anklyosaurus survived for approximately 135 million years.",
+    "./images/anklyosaurus.png"
+  )
 );
 
-const Brachiosaurus = new Dino(
-  "Brachiosaurus",
-  70000,
-  372,
-  "herbavor",
-  "North America",
-  "Late Jurasic",
-  "An asteroid was named 9954 Brachiosaurus in 1991.",
-  "./images/brachiosaurus.png"
+arr.push(
+  new Dino(
+    "Brachiosaurus",
+    70000,
+    372,
+    "herbavor",
+    "North America",
+    "Late Jurasic",
+    "An asteroid was named 9954 Brachiosaurus in 1991.",
+    "./images/brachiosaurus.png"
+  )
 );
 
-const Stegosaurus = new Dino(
-  "Stegosaurus",
-  11600,
-  79,
-  "herbavor",
-  "North America, Europe, Asia",
-  "Late Jurasic to Early Cretaceous",
-  "The Stegosaurus had between 17 and 22 seperate places and flat spines.",
-  "./images/stegosaurus.png"
+arr.push(
+  new Dino(
+    "Stegosaurus",
+    11600,
+    79,
+    "herbavor",
+    "North America, Europe, Asia",
+    "Late Jurasic to Early Cretaceous",
+    "The Stegosaurus had between 17 and 22 seperate places and flat spines.",
+    "./images/stegosaurus.png"
+  )
 );
 
-const Elasmosaurus = new Dino(
-  "Elasmosaurus",
-  16000,
-  59,
-  "carnivor",
-  "North America",
-  "Late Cretaceous",
-  "Elasmosaurus was a marine reptile first discovered in Kansas.",
-  "./images/elasmosaurus.png"
+arr.push(
+  new Dino(
+    "Elasmosaurus",
+    16000,
+    59,
+    "carnivor",
+    "North America",
+    "Late Cretaceous",
+    "Elasmosaurus was a marine reptile first discovered in Kansas.",
+    "./images/elasmosaurus.png"
+  )
 );
 
-const Pteranodon = new Dino(
-  "Pteranodon",
-  44,
-  20,
-  "carnivor",
-  "North America",
-  "Late Cretaceous",
-  "Actually a flying reptile, the Pteranodon is not a dinosaur.",
-  "./images/pteranodon.png"
+arr.push(
+  new Dino(
+    "Pteranodon",
+    44,
+    20,
+    "carnivor",
+    "North America",
+    "Late Cretaceous",
+    "Actually a flying reptile, the Pteranodon is not a dinosaur.",
+    "./images/pteranodon.png"
+  )
 );
 
-const Pigeon = new Dino(
-  "Pigeon",
-  0.5,
-  9,
-  "herbavor",
-  "World Wide",
-  "Holocene",
-  "All birds are living dinosaurs.",
-  "./images/pigeon.png"
+arr.push(
+  new Dino(
+    "Pigeon",
+    0.5,
+    9,
+    "herbavor",
+    "World Wide",
+    "Holocene",
+    "All birds are living dinosaurs.",
+    "./images/pigeon.png"
+  )
 );
 
 // Create Human Object
@@ -123,7 +141,7 @@ const human = {
 
 // Use IIFE to get human data from form
 
-(function () {
+const getHumanData = (function () {
   const name = document.getElementById("name");
   const feet = document.getElementById("feet");
   const inches = document.getElementById("inches");
@@ -133,8 +151,8 @@ const human = {
   const getHumanData = () => {
     return {
       name: name.value,
-      height: feet.value * 12 + inches.value,
-      weight: weight.value,
+      height: parseInt(feet.value) * 12 + parseInt(inches.value),
+      weight: parseInt(weight.value),
       diet: diet.value,
     };
   };
@@ -159,5 +177,7 @@ const human = {
 // On button click, prepare and display infographic
 document.getElementById("btn").addEventListener("click", (e) => {
   e.preventDefault();
-  console.log(getHumanData());
+  arr.splice(4, 0, getHumanData());
+
+  console.log(arr);
 });
