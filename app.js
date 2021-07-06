@@ -1,8 +1,7 @@
-const dinos = [];
 const form = document.getElementById("dino-compare");
 const grid = document.getElementById("grid");
 
-form.style.display = "initial";
+form.style.display = "block";
 grid.style.display = "none";
 
 // Create Dino Constructor
@@ -29,108 +28,11 @@ class Dino {
 }
 
 // Create Dino Objects
-dinos.push(
-  new Dino(
-    "Pigeon",
-    0.5,
-    9,
-    "herbavor",
-    "World Wide",
-    "Holocene",
-    "All birds are living dinosaurs.",
-    "./images/pigeon.png"
-  )
-);
-dinos.push(
-  new Dino(
-    "Triceratops",
-    13000,
-    114,
-    "herbavor",
-    "North America",
-    "Late Cretaceous",
-    "First discovered in 1889 by Othniel Charles Marsh",
-    "./images/triceratops.png"
-  )
-);
-
-dinos.push(
-  new Dino(
-    "Tyrannosaurus Rex",
-    11905,
-    144,
-    "carnivor",
-    "North America",
-    "Late Cretaceous",
-    "The largest known skull measures in at 5 feet long.",
-    "./images/tyrannosaurusrex.png"
-  )
-);
-
-dinos.push(
-  new Dino(
-    "Anklyosaurus",
-    10500,
-    55,
-    "herbavor",
-    "North America",
-    "Late Cretaceous",
-    "Anklyosaurus survived for approximately 135 million years.",
-    "./images/anklyosaurus.png"
-  )
-);
-
-dinos.push(
-  new Dino(
-    "Brachiosaurus",
-    70000,
-    372,
-    "herbavor",
-    "North America",
-    "Late Jurasic",
-    "An asteroid was named 9954 Brachiosaurus in 1991.",
-    "./images/brachiosaurus.png"
-  )
-);
-
-dinos.push(
-  new Dino(
-    "Stegosaurus",
-    11600,
-    79,
-    "herbavor",
-    "North America, Europe, Asia",
-    "Late Jurasic to Early Cretaceous",
-    "The Stegosaurus had between 17 and 22 seperate places and flat spines.",
-    "./images/stegosaurus.png"
-  )
-);
-
-dinos.push(
-  new Dino(
-    "Elasmosaurus",
-    16000,
-    59,
-    "carnivor",
-    "North America",
-    "Late Cretaceous",
-    "Elasmosaurus was a marine reptile first discovered in Kansas.",
-    "./images/elasmosaurus.png"
-  )
-);
-
-dinos.push(
-  new Dino(
-    "Pteranodon",
-    44,
-    20,
-    "carnivor",
-    "North America",
-    "Late Cretaceous",
-    "Actually a flying reptile, the Pteranodon is not a dinosaur.",
-    "./images/pteranodon.png"
-  )
-);
+const dinos = Dinos.map((d) => {
+  const imgFile = "./images/" + d.species.toLowerCase() + ".png";
+  const newDino = new Dino(...Object.values(d), imgFile);
+  return newDino;
+});
 
 // Create Human Object
 let human = {
@@ -143,12 +45,14 @@ let human = {
 
 // Use IIFE to get human data from form
 const getHumanData = (function () {
+  // get the form controls
   const name = document.getElementById("name");
   const feet = document.getElementById("feet");
   const inches = document.getElementById("inches");
   const weight = document.getElementById("weight");
   const diet = document.getElementById("diet");
 
+  // function to read values from controls
   const getHumanData = () => {
     return {
       ...human,
@@ -162,12 +66,16 @@ const getHumanData = (function () {
 })();
 
 // Create Dino Compare Method 1 *** compares to random dinosaur from the list
-// NOTE: Weight in JSON file is in lbs, height in inches.
+// This function will generate a randon fact based on comparison by weight
 const compWeight = () => {
+  // generate a random number between 0 and 7
   let num = Math.floor(Math.random() * 8);
   if (num == 4) num += 1; // skip human
-  console.log("weight", human);
-  if (dinos[num].species == "Pigeon") num += 1; // skip bird
+  if (dinos[num].species == "Pigeon") {
+    if (num == 7) num -= 1;
+    else num += 1;
+  } // skip bird
+  //compare human to dino based on weight
   if (human.weight > dinos[num].weight) {
     dinos[num].fact = `${human.name} is heavier than ${dinos[num].species}`;
   } else {
@@ -176,12 +84,13 @@ const compWeight = () => {
 };
 
 // Create Dino Compare Method 2  *** compares to random dinosaur from the list
-// NOTE: Weight in JSON file is in lbs, height in inches.
+// This function will generate a randon fact based on comparison by height
 const compHeight = () => {
+  // generate a random number between 0 and 7
   let num = Math.floor(Math.random() * 8);
-  console.log("height", human);
   if (num == 4) num += 2; // skip human and previous dinosaur in Method 1
   if (dinos[num].species == "Pigeon") num += 1; // skip bird
+  //compare human to dino based on height
   if (human.height > dinos[num].height) {
     dinos[num].fact = `${human.name} is taller than ${dinos[num].species}`;
   } else {
@@ -190,12 +99,13 @@ const compHeight = () => {
 };
 
 // Create Dino Compare Method 3
-// NOTE: Weight in JSON file is in lbs, height in inches.
+// This function will generate a randon fact based on comparison by diet
 const compDiet = () => {
+  // generate a random number between 0 and 7
   let num = Math.floor(Math.random() * 8);
-  console.log("diet", human);
   if (num == 4) num += 3; // skip human and previous dinosaurs in Method 1, 2
   if (dinos[num].species == "Pigeon") num += 1; // skip bird
+  //compare human to dino based on diet
   if (human.diet === dinos[num].diet) {
     dinos[
       num
@@ -209,31 +119,30 @@ const compDiet = () => {
 
 // Generate Tiles for each Dino in dinosay
 const generateTiles = () => {
-  dinos.splice(4, 0, human);
-  const tiles = [];
-  dinos.forEach((d, idx) => {
-    const tile = document.createElement("DIV");
+  dinos.splice(4, 0, human); // insert human object in correct position
+  const tiles = []; // array of tiles
+  dinos.forEach((d) => {
+    const tile = document.createElement("DIV"); // create grid element
     tile.classList.add("grid-item");
-
+    // set tile contenet. If the object has name, that's a human
     tile.innerHTML = `
-                      <h3>${d.name ? d.name : d.species}</h3>
+                      <h3>${d.name ? d.name : d.species}</h3> 
                       <img src='${d.img}' />
                       <p>${d.name ? "" : d.fact}</p>`;
-    tiles.push(tile);
+    tiles.push(tile); // append new tile to the array
   });
-  console.log(tiles);
   return tiles;
 };
 
 // Add tiles to DOM
 const addTilesToDom = () => {
-  const frag = document.createDocumentFragment();
-  const tiles = generateTiles();
-  tiles.forEach((d, idx) => {
-    frag.appendChild(d);
+  const frag = document.createDocumentFragment(); //create a dom fragment
+  const tiles = generateTiles(); // get the array of tile elemenents
+  tiles.forEach((d) => {
+    frag.appendChild(d); // append tiles to the document fragment
   });
   grid.innerHTML = "";
-  grid.appendChild(frag);
+  grid.appendChild(frag); // insert the tiles into the grid element on dom
 };
 
 // Remove form from screen
@@ -245,7 +154,7 @@ const hideForm = () => {
 // On button click, prepare and display infographic
 document.getElementById("btn").addEventListener("click", (e) => {
   e.preventDefault();
-  human = getHumanData();
+  human = getHumanData(); // set human object to the data from user
   compWeight();
   compHeight();
   compDiet();
